@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Price Predictor</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #03dac6;
+            text-shadow: 0 0 8px rgba(3, 218, 198, 0.4);
+            margin-bottom: 10px;
+        }
+        p { color: #bb86fc; }
+        
+        .container {
+            max_width: 850px;
+            margin: 30px auto;
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #cf6679;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            background: #2c2c2c;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #bb86fc;
+        }
+        button {
+            grid-column: span 2;
+            background: linear-gradient(45deg, #bb86fc, #3700b3);
+            color: white;
+            padding: 15px;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.02);
+        }
+        .result {
+            margin-top: 40px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #03dac6;
+            background: #252525;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #03dac6;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mobile Price Predictor</h1>
+    <p>Enter the specifications to estimate the market value</p>
+
+    <div class="container">
+        <form action="/predict" method="POST">
+            <div class="form-grid">
+                {% for feature in feature_names %}
+                <div class="form-group">
+                    <label>{{ feature }}</label>
+                    
+                    {% if feature in options %}
+                        <select name="{{ feature }}" required>
+                            <option value="" disabled selected>Select {{ feature }}</option>
+                            {% for opt in options[feature] %}
+                                <option value="{{ opt }}">{{ opt }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <input type="number" step="any" name="{{ feature }}" placeholder="Enter value" required>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <button type="submit">Predict Price</button>
+            </div>
+        </form>
+
+        {% if prediction_text %}
+        <div class="result">
+            {{ prediction_text }}
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
